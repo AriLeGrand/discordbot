@@ -37,7 +37,7 @@ async def on_ready():
         print(f"Synced {len(synced)} commands !")
     except Exception as e:
         print(e)
-    print(f"Ready")
+    print("Ready")
 
 
 @client.tree.command(name="ping", description="Ping pong")
