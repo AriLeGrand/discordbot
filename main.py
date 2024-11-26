@@ -145,9 +145,7 @@ async def color_pic(ctx, hex_color: str):
         await handle_exception(ctx, e)
 
 
-@client.tree.command(
-    name="create_role", description="Create a new role with a specified name and color"
-)
+@client.tree.command(name="create_role", description="Create a new role with a specified name and color")
 @app_commands.guilds(discord.Object(id=testingserver))
 async def create_role(ctx, role_name: str, color: str):
     try:
