@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,text
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,text
+# Created by https://www.toptal.com/developers/gitignore/api/text,visualstudiocode,venv
+# Edit at https://www.toptal.com/developers/gitignore?templates=text,visualstudiocode,venv
 
 ### Text ###
 *.doc
@@ -11,6 +11,20 @@
 *.txt
 *.wpd
 *.wps
+
+### venv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
 
 ### VisualStudioCode ###
 .vscode/*
@@ -31,4 +45,4 @@
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,text
+# End of https://www.toptal.com/developers/gitignore/api/text,visualstudiocode,venv
