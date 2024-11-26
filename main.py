@@ -1,5 +1,8 @@
 import discord
 import random
+import re
+import requests
+import asyncio
 from discord.ext import commands
 from discord import app_commands
 
@@ -102,5 +105,7 @@ async def userinfo(ctx, member: discord.Member):
 async def roll_dice(ctx):
     dice_roll = random.randint(1, 6)
     await defer_and_send(ctx, f'you rolled a {dice_roll}!')
+    
+
 
 client.run(token)
