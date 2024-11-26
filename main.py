@@ -118,15 +118,13 @@ async def roll_dice(ctx):
     await defer_and_send(ctx, f"you rolled a {dice_roll}!")
 
 
-@client.tree.command(
-    name="looking_color", description="Generate a picture with a specified hex color"
-)
+@client.tree.command(name="looking_color", description="Generate a picture with a specified hex color")
 @app_commands.guilds(discord.Object(id=testingserver))
 async def color_pic(ctx, hex_color: str):
     try:
         # Validate hex color code
         if not re.match(r"^#(?:[0-9a-fA-F]{3}){1,2}$", hex_color):
-            await defer_and_send(ctx,"Invalid hex color code. Please use a format like #RRGGBB.",ephemeral=True,)
+            await defer_and_send(ctx, "Invalid hex color code. Please use a format like #RRGGBB.", ephemeral=True)
             return
 
         # Create a 100x100 image with the specified hex color
@@ -137,10 +135,15 @@ async def color_pic(ctx, hex_color: str):
         img.save(temp_file, format="PNG")
         temp_file.seek(0)
 
-        # Upload the image to Discord
+        # Create an embed with the image
+        embed = discord.Embed(title=f"Looking color for {hex_color}", color=discord.Color.purple())
+        file = discord.File(temp_file, filename="color_pic.png")
+        embed.set_image(url=f"attachment://color_pic.png")
+
+        # Send the embed with the image as an attachment
         await ctx.response.defer(ephemeral=False)
-        await ctx.followup.send(file=discord.File(temp_file, filename="color_pic.png"))
-        
+        await ctx.followup.send(embed=embed, file=file)
+
     except Exception as e:
         await handle_exception(ctx, e)
 
@@ -200,5 +203,42 @@ async def change_role_color(ctx, role_name: str, color: str):
 
     except Exception as e:
         await handle_exception(ctx, e)
+
+@client.tree.command(name="kick", description="Kick a user from the server")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def kick_user(ctx, member: discord.Member, reason: str = "No reason provided"):
+    try:
+        await member.kick(reason=reason)
+        await defer_and_send(ctx, f"{member.display_name} has been kicked from the server. Reason: {reason}", ephemeral=True)
+    except discord.Forbidden:
+        await defer_and_send(ctx, "I don't have permission to kick this user.", ephemeral=True)
+    except Exception as e:
+        await handle_exception(ctx, e)
+
+
+@client.tree.command(name="ban", description="Ban a user from the server")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def ban_user(ctx, member: discord.Member, reason: str = "No reason provided"):
+    try:
+        await member.ban(reason=reason)
+        await defer_and_send(ctx, f"{member.display_name} has been banned from the server. Reason: {reason}", ephemeral=True)
+    except discord.Forbidden:
+        await defer_and_send(ctx, "I don't have permission to ban this user.", ephemeral=True)
+    except Exception as e:
+        await handle_exception(ctx, e)
+
+
+@client.tree.command(name="unban", description="Unban a user from the server")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def unban_user(ctx, user_id: int):
+    try:
+        user = await client.fetch_user(user_id)
+        await ctx.guild.unban(user)
+        await defer_and_send(ctx, f"{user.display_name} has been unbanned from the server.", ephemeral=True)
+    except discord.Forbidden:
+        await defer_and_send(ctx, "I don't have permission to unban this user.", ephemeral=True)
+    except Exception as e:
+        await handle_exception(ctx, e)
+
 
 client.run(token)
