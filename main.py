@@ -241,4 +241,30 @@ async def unban_user(ctx, user_id: int):
         await handle_exception(ctx, e)
 
 
+shared_todo_list = []
+
+@client.tree.command(name="add_todo", description="Add a task to the shared to-do list")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def add_todo(ctx, task: str):
+    shared_todo_list.append(task)
+    await defer_and_send(ctx, f"Task '{task}' added to the shared to-do list.", ephemeral=False)
+
+@client.tree.command(name="view_todo", description="View the shared to-do list")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def view_todo(ctx):
+    if not shared_todo_list:
+        await defer_and_send(ctx, "The shared to-do list is empty.", ephemeral=False)
+    else:
+        task_list = "\n".join(f"{i+1}. {task}" for i, task in enumerate(shared_todo_list))
+        await defer_and_send(ctx, f"The shared to-do list:\n{task_list}", ephemeral=False)
+
+@client.tree.command(name="remove_todo", description="Remove a task from the shared to-do list")
+@app_commands.guilds(discord.Object(id=testingserver))
+async def remove_todo(ctx, task_number: int):
+    if 0 < task_number <= len(shared_todo_list):
+        removed_task = shared_todo_list.pop(task_number - 1)
+        await defer_and_send(ctx, f"Task '{removed_task}' removed from the shared to-do list.", ephemeral=False)
+    else:
+        await defer_and_send(ctx, "Invalid task number.", ephemeral=False)
+
 client.run(token)
